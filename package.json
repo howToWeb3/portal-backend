@@ -1,0 +1,61 @@
+{
+    "name": "moonboi-back",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "This repository serves as a backend repo for the moonboi589 NFT collection series",
+    "author": "Tushar Pardhe",
+    "license": "UNLICENSED",
+    "main": "app.js",
+    "keywords": [
+        "moon",
+        "moonboi",
+        "moonboi589",
+        "nft",
+        "xrpl"
+    ],
+    "scripts": {
+        "check:format": "prettier --check .",
+        "commit": "cz",
+        "fix": "yarn format && yarn lint:fix",
+        "fix:eslint": "eslint src --ext .js,.ts,.jsx,.tsx --fix",
+        "fix:prettier": "prettier --write .",
+        "format": "prettier --write .",
+        "lint": "eslint .",
+        "lint:fix": "eslint --fix .",
+        "start": "nodemon app.js"
+    },
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "cors": "^2.8.5",
+        "dotenv": "^16.4.0",
+        "express": "^4.18.2",
+        "jsonwebtoken": "^9.0.2",
+        "node-fetch": "^3.3.2",
+        "xrpl": "^2.14.0",
+        "xumm-sdk": "^1.11.0"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^18.5.0",
+        "@commitlint/config-conventional": "^18.5.0",
+        "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+        "commitizen": "^4.3.0",
+        "eslint": "^8.56.0",
+        "eslint-plugin-node": "^11.1.0",
+        "husky": "^8.0.3",
+        "nodemon": "^3.0.3",
+        "prettier": "^3.2.4",
+        "prettier-plugin-multiline-arrays": "^3.0.1",
+        "prettier-plugin-pkg": "^0.18.1",
+        "prettier-plugin-sh": "^0.14.0"
+    },
+    "commitlint": {
+        "extends": [
+            "@commitlint/config-conventional"
+        ]
+    },
+    "eslintConfig": {
+        "extends": [
+            "eslint:recommended"
+        ]
+    }
+}
