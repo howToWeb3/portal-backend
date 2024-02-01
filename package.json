@@ -5,6 +5,9 @@
     "description": "This repository serves as a backend repo for the moonboi589 NFT collection series",
     "author": "Tushar Pardhe",
     "license": "UNLICENSED",
+    "engines": {
+        "node": ">=18.0.0"
+    },
     "main": "app.js",
     "keywords": [
         "moon",
@@ -24,6 +27,11 @@
         "lint:fix": "eslint --fix .",
         "start": "nodemon app.js"
     },
+    "config": {
+        "commitizen": {
+            "path": "./node_modules/cz-conventional-changelog"
+        }
+    },
     "dependencies": {
         "bcrypt": "^5.1.1",
         "cors": "^2.8.5",
@@ -39,6 +47,7 @@
         "@commitlint/config-conventional": "^18.5.0",
         "@trivago/prettier-plugin-sort-imports": "^4.3.0",
         "commitizen": "^4.3.0",
+        "cz-conventional-changelog": "^3.3.0",
         "eslint": "^8.56.0",
         "eslint-plugin-node": "^11.1.0",
         "husky": "^8.0.3",

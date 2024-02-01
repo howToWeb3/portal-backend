@@ -20,8 +20,7 @@
         "resolveJsonModule": true,
         "isolatedModules": true,
         "jsx": "preserve",
-        "incremental": true,
-        "baseUrl": "."
+        "incremental": true
     },
     "exclude": [
         "node_modules"

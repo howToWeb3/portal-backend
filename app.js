@@ -1,16 +1,17 @@
 // inital setup for express server
+import userRoutes from './routes/user/index.js';
 import cors from 'cors';
+import { configDotenv } from 'dotenv';
 import express from 'express';
+
+configDotenv();
 
 const app = express();
 
 app.use(express.json());
 app.use(cors());
 
-app.get('/', (req, res) => {
-    console.log('test');
-    res.send('test');
-});
+app.use('/user', userRoutes);
 
 const PORT = process.env.PORT || 8080;
 

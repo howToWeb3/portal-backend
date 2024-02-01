@@ -6,6 +6,13 @@
     "parserOptions": {
         "ecmaVersion": 2020
     },
+    "settings": {
+        "node": {
+          "convertPath": {"src/**/*.js": ["^src/(.+)\\.js$", "dist/$1.js"]},
+          "tryExtensions": [".js", ".json", ".node"],
+          "engines": ["node >= 18.0.0"]
+        }
+    },
     "rules": {
         "node/exports-style": [
             "error",
