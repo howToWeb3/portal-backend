@@ -1,4 +1,7 @@
-import { Client } from 'xrpl';
+import { Client, convertHexToString } from 'xrpl';
+
+export const xrplTokenName = value =>
+    value?.length === 40 ? convertHexToString(value).replaceAll('\u0000', '') : value;
 
 export default async function fetchAccountLines(req, res) {
     const resObj = {
@@ -65,6 +68,10 @@ export default async function fetchAccountLines(req, res) {
         };
 
         const response = await client.request(request);
+        response.result.lines = response.result.lines.map(line => {
+            line.ticker = xrplTokenName(line.currency);
+            return line;
+        });
 
         resObj.data = response.result;
         resObj.success = true;

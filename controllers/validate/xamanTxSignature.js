@@ -12,6 +12,9 @@ export default async function validateXamanSign(req, res) {
     try {
         const { query } = req;
 
+        // Set jwt to true by default - which means return jwt token
+        if (!query.jwt) query.jwt = true;
+
         if (!(query && query.uuid)) {
             resObj.data = {};
             resObj.success = false;
@@ -48,7 +51,7 @@ export default async function validateXamanSign(req, res) {
 
         if (account) {
             const token = jwt.sign({ address: account }, process.env.TOKEN_KEY, { expiresIn: '1d' });
-            resObj.data = { address: account, token };
+            resObj.data = { address: account, token: Boolean(query.jwt) === true ? token : null };
             resObj.success = true;
             resObj.error = false;
             resObj.message = `Success`;
