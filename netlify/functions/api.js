@@ -1,5 +1,5 @@
 // inital setup for express server
-import userRotes from '../routes/user/index.js';
+import userRotes from '../../routes/user/index.js';
 import cors from 'cors';
 import { configDotenv } from 'dotenv';
 import express from 'express';
