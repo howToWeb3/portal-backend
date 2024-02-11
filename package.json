@@ -17,8 +17,10 @@
         "xrpl"
     ],
     "scripts": {
+        "build": "netlify build",
         "check:format": "prettier --check .",
         "commit": "cz",
+        "dev": "netlify dev",
         "fix": "yarn format && yarn lint:fix",
         "fix:eslint": "eslint src --ext .js,.ts,.jsx,.tsx --fix",
         "fix:prettier": "prettier --write .",
@@ -53,6 +55,7 @@
         "eslint": "^8.56.0",
         "eslint-plugin-node": "^11.1.0",
         "husky": "^8.0.3",
+        "netlify-cli": "^17.16.1",
         "nodemon": "^3.0.3",
         "prettier": "^3.2.4",
         "prettier-plugin-multiline-arrays": "^3.0.1",
