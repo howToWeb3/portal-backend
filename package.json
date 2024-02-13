@@ -20,6 +20,7 @@
         "build": "netlify build",
         "check:format": "prettier --check .",
         "commit": "cz",
+        "deploy:prod": "netlify deploy --prod",
         "dev": "netlify dev",
         "fix": "yarn format && yarn lint:fix",
         "fix:eslint": "eslint src --ext .js,.ts,.jsx,.tsx --fix",
