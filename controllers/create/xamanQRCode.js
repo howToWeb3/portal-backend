@@ -28,9 +28,12 @@ export default async function createXamanQRCode(req, res) {
             body: JSON.stringify({
                 txjson: tx,
                 options: { pathfinding_fallback: false, force_network: 'N/A' },
-                user_token: XamanToken,
             }),
         };
+
+        if (XamanToken) {
+            options.body.user_token = XamanToken;
+        }
 
         const xummRes = await fetch(xummUrl, options).then(response => response.json());
         resObj.data = xummRes;
