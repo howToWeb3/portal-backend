@@ -1,4 +1,4 @@
-import { XummSdk } from 'xumm-sdk';
+import fetch from 'node-fetch';
 
 export default async function createXamanQRCode(req, res) {
     const resObj = {
@@ -14,10 +14,26 @@ export default async function createXamanQRCode(req, res) {
             res.status(400).json(resObj);
             return;
         }
+        const { XamanToken, ...tx } = req.body;
 
-        const Sdk = new XummSdk(process.env.XUMM_API_KEY, process.env.XUMM_API_SECRET);
-        const payload = await Sdk.payload.create(req.body, true);
-        resObj.data = payload;
+        const xummUrl = 'https://xumm.app/api/v1/platform/payload';
+        const options = {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'Content-Type': 'application/json',
+                'X-API-Key': process.env.XUMM_API_KEY,
+                'X-API-Secret': process.env.XUMM_API_SECRET,
+            },
+            body: JSON.stringify({
+                txjson: tx,
+                options: { pathfinding_fallback: false, force_network: 'N/A' },
+                user_token: XamanToken,
+            }),
+        };
+
+        const xummRes = await fetch(xummUrl, options).then(response => response.json());
+        resObj.data = xummRes;
         res.status(200).json(resObj);
     } catch (error) {
         console.log(error);

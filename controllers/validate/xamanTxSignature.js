@@ -33,12 +33,15 @@ export default async function validateXamanSign(req, res) {
             },
         };
 
+        const xummRes = await fetch(`https://xumm.app/api/v1/platform/payload/${query.uuid}`, options).then(response =>
+            response.json(),
+        );
+
         const {
             response: { account },
             meta: { signed },
-        } = await fetch(`https://xumm.app/api/v1/platform/payload/${query.uuid}`, options).then(response =>
-            response.json(),
-        );
+            application: { issued_user_token },
+        } = xummRes;
 
         if (!signed) {
             resObj.data = null;
@@ -51,7 +54,11 @@ export default async function validateXamanSign(req, res) {
 
         if (account) {
             const token = jwt.sign({ address: account }, process.env.TOKEN_KEY, { expiresIn: '1d' });
-            resObj.data = { address: account, token: Boolean(query.jwt) === true ? token : null };
+            resObj.data = {
+                address: account,
+                token: Boolean(query.jwt) === true ? token : null,
+                xamanToken: issued_user_token,
+            };
             resObj.success = true;
             resObj.error = false;
             resObj.message = `Success`;
