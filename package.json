@@ -17,7 +17,8 @@
         "xrpl"
     ],
     "scripts": {
-        "build": "netlify build",
+        "build": "npm run build:deploy && netlify build",
+        "build:deploy": "npx prisma migrate deploy",
         "check:format": "prettier --check .",
         "commit": "cz",
         "deploy:prod": "netlify deploy --prod",
