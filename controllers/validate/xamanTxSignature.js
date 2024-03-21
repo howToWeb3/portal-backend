@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import fetch from 'node-fetch';
+import { Client } from 'xrpl';
 
 export default async function validateXamanSign(req, res) {
     const resObj = {
@@ -8,6 +9,8 @@ export default async function validateXamanSign(req, res) {
         message: '',
         data: {},
     };
+
+    const client = new Client(process.env.XRPL_NETWORK);
 
     try {
         const { query } = req;
@@ -53,12 +56,40 @@ export default async function validateXamanSign(req, res) {
         }
 
         if (account) {
+            await client.connect();
+
+            const newAccount = await client
+                .request({
+                    command: 'account_info',
+                    account: account,
+                })
+                .then(() => {
+                    return false;
+                })
+                .catch(err => {
+                    if (err.data.error === 'actNotFound') {
+                        return true;
+                    }
+                    return false;
+                });
+
+            if (newAccount) {
+                return res.status(200).json({
+                    success: false,
+                    error: true,
+                    message: `Account not found`,
+                    data: null,
+                });
+            }
+
             const token = jwt.sign({ address: account }, process.env.TOKEN_KEY, { expiresIn: '1d' });
+
             resObj.data = {
                 address: account,
                 token: Boolean(query.jwt) === true ? token : null,
                 xamanToken: issued_user_token,
             };
+
             resObj.success = true;
             resObj.error = false;
             resObj.message = `Success`;
@@ -79,6 +110,7 @@ export default async function validateXamanSign(req, res) {
         resObj.error = true;
         resObj.message = `Internal Error, Please try again`;
         res.status(500).json(resObj);
+    } finally {
+        await client.disconnect();
     }
-    return;
 }

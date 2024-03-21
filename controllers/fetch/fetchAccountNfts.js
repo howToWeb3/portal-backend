@@ -1,4 +1,4 @@
-import { Client } from 'xrpl';
+import { Client, convertHexToString } from 'xrpl';
 
 export default async function fetchAccountNfts(req, res) {
     const resObj = {
@@ -8,11 +8,13 @@ export default async function fetchAccountNfts(req, res) {
         data: {},
     };
 
+    const client = new Client(process.env.XRPL_NETWORK);
+
     try {
         const { query } = req;
         const { address, marker } = query;
         let { limit } = query;
-        limit = parseInt(limit);
+        limit = limit ? parseInt(limit) : 25;
 
         if (!(query && address)) {
             resObj.data = {};
@@ -30,32 +32,7 @@ export default async function fetchAccountNfts(req, res) {
             return res.status(400).json(resObj);
         }
 
-        const client = new Client(process.env.XRPL_NETWORK);
         await client.connect();
-
-        const newAccount = await client
-            .request({
-                command: 'account_info',
-                account: address,
-            })
-            .then(() => {
-                return false;
-            })
-            .catch(err => {
-                if (err.data.error === 'actNotFound') {
-                    return true;
-                }
-                return false;
-            });
-
-        if (newAccount) {
-            resObj.data = null;
-            resObj.success = false;
-            resObj.error = true;
-            resObj.message = `Account not found`;
-            res.status(404).json(resObj);
-            return;
-        }
 
         const request = {
             command: 'account_nfts',
@@ -66,13 +43,24 @@ export default async function fetchAccountNfts(req, res) {
 
         const account_nfts = await client.request(request);
 
-        resObj.data = account_nfts.result;
+        let nfts = account_nfts.result.account_nfts;
+
+        nfts.forEach(nft => {
+            nft.URI = convertHexToString(nft.URI);
+        });
+
+        resObj.data = {
+            marker: account_nfts.result.marker,
+            limit: account_nfts.result.limit,
+            nfts,
+        };
         resObj.success = true;
         resObj.error = false;
         resObj.message = `Success`;
         res.status(200).json(resObj);
-        await client.disconnect();
     } catch (error) {
         res.status(500).json({ message: error.message });
+    } finally {
+        await client.disconnect();
     }
 }
