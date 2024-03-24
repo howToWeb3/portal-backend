@@ -52,6 +52,7 @@ async function main() {
             name: 'HappyCat #7201',
             description: '10k very cute and loveable HappyCats just waiting to find a new home!',
             image: 'ipfs://bafybeigqtp6arogsjxkri46xjvtvyg3faqix2qluyxcsbxqcseo32suebi/7201.png',
+            price: 10000,
             tags: [
                 'tag1',
                 'tag2',
@@ -64,6 +65,7 @@ async function main() {
                 'tag3',
             ],
             name: 'NFT 2',
+            price: 20999,
             description: 'This is the second NFT',
             image: 'ipfs://bafybeigqtp6arogsjxkri46xjvtvyg3faqix2qluyxcsbxqcseo32suebi/7201.png',
         },
@@ -73,6 +75,7 @@ async function main() {
                 'tag1',
                 'tag3',
             ],
+            price: 30000,
             name: 'NFT 3',
             description: 'This is the third NFT',
             image: 'ipfs://bafybeigqtp6arogsjxkri46xjvtvyg3faqix2qluyxcsbxqcseo32suebi/7201.png',
@@ -96,7 +99,16 @@ async function main() {
     // Insert seed data
     const createdUsers = await Promise.all(users.map(user => prisma.user.create({ data: user })));
     const createdCollections = await Promise.all(
-        collections.map(collection => prisma.collection.create({ data: collection })),
+        collections.map((collection, index) =>
+            prisma.collection.create({
+                data: {
+                    ...collection,
+                    owner: {
+                        connect: { id: createdUsers[index % createdUsers.length].id },
+                    },
+                },
+            }),
+        ),
     );
 
     // Associate NFTs with users and collections

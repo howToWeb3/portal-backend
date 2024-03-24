@@ -16,9 +16,10 @@ datasource db {
 // -------------------------------------- MODEL DEFINITIONS --------------------------------------
 
 model User {
-  id      String @id @default(uuid())
-  address String @unique
-  nfts    NFT[]
+  id         String       @id @default(uuid())
+  address    String       @unique
+  nfts       NFT[]
+  Collection Collection[]
 }
 
 model NFT {
@@ -29,6 +30,7 @@ model NFT {
   name        String
   description String
   image       String
+  price       Float
 
   // relationships ----------------------------
 
@@ -46,10 +48,12 @@ model Collection {
 
   // relationships ----------------------------
 
+  owner                 User                    @relation(fields: [userId], references: [id])
   nfts                  NFT[]
   FeaturedNFTCollection FeaturedNFTCollection[]
 
   TrendingNFTCollection TrendingNFTCollection[]
+  userId                String
 }
 
 model FeaturedNFTCollection {

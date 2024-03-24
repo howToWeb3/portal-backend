@@ -21,6 +21,11 @@ export default async function fetchTrendingNftCollections(req, res) {
                         name: true,
                         description: true,
                         image: true,
+                        owner: {
+                            select: {
+                                address: true,
+                            },
+                        },
                     },
                 },
             },

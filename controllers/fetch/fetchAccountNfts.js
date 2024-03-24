@@ -46,12 +46,12 @@ export default async function fetchAccountNfts(req, res) {
         let nfts = account_nfts.result.account_nfts;
 
         nfts.forEach(nft => {
-            nft.URI = convertHexToString(nft.URI);
+            if (nft.URI) nft.URI = convertHexToString(nft.URI);
         });
 
         resObj.data = {
-            marker: account_nfts.result.marker,
-            limit: account_nfts.result.limit,
+            marker: account_nfts.result.marker ?? null,
+            limit: account_nfts.result.limit ?? null,
             nfts,
         };
         resObj.success = true;
@@ -59,6 +59,7 @@ export default async function fetchAccountNfts(req, res) {
         resObj.message = `Success`;
         res.status(200).json(resObj);
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: error.message });
     } finally {
         await client.disconnect();

@@ -7,10 +7,23 @@ export default async function fetchNfts(req, res) {
         const page = parseInt(req.query.page, 10) || 1;
         const limit = parseInt(req.query.limit, 10) || 10;
         const skip = (page - 1) * limit;
-        const name = req.query.name;
+        const { name, collectionId } = req.query;
 
-        if (!name) {
-            return ErrorResponse(res, 'Please provide a valid NFT name');
+        if (!(name || collectionId)) {
+            return ErrorResponse(res, 'Please provide a valid search query');
+        }
+
+        const query = {};
+
+        if (name) {
+            query.name = {
+                contains: name,
+                mode: 'insensitive',
+            };
+        } else if (collectionId) {
+            query.Collection = {
+                id: parseInt(collectionId, 10),
+            };
         }
 
         // include owner and collection details in the response
@@ -24,6 +37,7 @@ export default async function fetchNfts(req, res) {
                 description: true,
                 image: true,
                 owner: true,
+                price: true,
                 collectionId: true,
                 Collection: {
                     select: {
@@ -34,12 +48,7 @@ export default async function fetchNfts(req, res) {
                     },
                 },
             },
-            where: {
-                name: {
-                    contains: name,
-                    mode: 'insensitive',
-                },
-            },
+            where: query,
             skip,
             take: limit,
             orderBy: {
@@ -49,12 +58,7 @@ export default async function fetchNfts(req, res) {
 
         // Count the total number of NFTs with the given name
         const totalNfts = await prisma.nFT.count({
-            where: {
-                name: {
-                    contains: name,
-                    mode: 'insensitive',
-                },
-            },
+            where: query,
         });
 
         // Calculate pagination metadata
