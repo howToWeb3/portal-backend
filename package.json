@@ -17,7 +17,7 @@
         "xrpl"
     ],
     "scripts": {
-        "build": "npm run build:deploy && netlify build",
+        "build": "npx prisma generate && netlify build",
         "build:deploy": "npx prisma migrate deploy",
         "check:format": "prettier --check .",
         "commit": "cz",
@@ -29,6 +29,8 @@
         "format": "prettier --write .",
         "lint": "eslint .",
         "lint:fix": "eslint --fix .",
+        "postinstall": "prisma generate",
+        "prisma:generate": "npx prisma generate",
         "prisma:migrate": "npx prisma migrate dev",
         "prisma:reset": "npx prisma migrate reset --force && npm run seed",
         "seed": "node seed.js",
